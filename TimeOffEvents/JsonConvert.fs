@@ -1,4 +1,4 @@
-﻿namespace Timeoff
+﻿namespace JsonConvert
 
 open Newtonsoft.Json
 open Newtonsoft.Json.Serialization

@@ -58,7 +58,6 @@
     <Compile Include="EventStorage.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="Tests.fs" />
-    <Compile Include="RestAPI.fs"/>
     <Compile Include="ConfigRoutes.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

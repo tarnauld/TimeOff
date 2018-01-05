@@ -4,9 +4,8 @@ open Suave
 open Suave.Filters
 open Suave.Operators
 open EventStorage
+open JsonConvert
 open System
-open Timeoff
-
 let store = InMemoryStore.Create<UserId, RequestEvent>()
 
 let executeAllCommands (events: RequestEvent list, command) = 
