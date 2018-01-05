@@ -6,25 +6,43 @@ open Suave.Operators
 open System
 open Commands
 
+let parseHalfDay hd = match hd with
+                        | "AM" -> AM
+                        | "PM" -> PM
+
 let app = 
     choose
       [ GET >=> choose 
       [ 
         //* User *
         //Route: user ask for a paid leave.
-        pathScan "/userPaidLeaveAsk/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> addHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM })
+        pathScan "/userPaidLeaveAsk/%d/%d/%d/%d/%s/%d/%d/%d/%s" (fun(id, yb, mb, db, hdb, ye, me, de, hde) -> 
+          let startDateHalfDay = parseHalfDay hdb
+          let endDateHalfDay = parseHalfDay hde
+          addHoliday id { Date = DateTime(yb, mb, db); HalfDay = startDateHalfDay } { Date = DateTime(ye, me, de); HalfDay = endDateHalfDay })
         //Route: user can list his own paid leave.
-        path "/userPaidLeaves" >=> 
-          getHoliday
+        pathScan "/userPaidLeaves/%d" (fun(id) -> getHoliday id)
         //Route: user cancel a pay leave.
-        pathScan "/userPaidLeaveCancel/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
+        pathScan "/userPaidLeaveCancel/%d/%d/%d/%d/%s/%d/%d/%d/%s" (fun(id, yb, mb, db, hdb, ye, me, de, hde) -> 
+          let startDateHalfDay = parseHalfDay hdb
+          let endDateHalfDay = parseHalfDay hde
+          cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = startDateHalfDay } { Date = DateTime(ye, me, de); HalfDay = endDateHalfDay }) 
         
         //* Admin *
         //Route: admin accepts a pay leave for a user.
-        pathScan "/adminPaidLeaveAccept/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> acceptHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
+        pathScan "/adminPaidLeaveAccept/%d/%d/%d/%d/%s/%d/%d/%d/%s" (fun(id, yb, mb, db, hdb, ye, me, de, hde) ->
+          let startDateHalfDay = parseHalfDay hdb
+          let endDateHalfDay = parseHalfDay hde
+          acceptHoliday id { Date = DateTime(yb, mb, db); HalfDay = startDateHalfDay } { Date = DateTime(ye, me, de); HalfDay = endDateHalfDay }) 
         //Route: admin refuses a pay leave for a user.
-        pathScan "/adminPaidLeavesRefuse/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> refuseHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
+        pathScan "/adminPaidLeavesRefuse/%d/%d/%d/%d/%s/%d/%d/%d/%s" (fun(id, yb, mb, db, hdb, ye, me, de, hde) ->
+          let startDateHalfDay = parseHalfDay hdb
+          let endDateHalfDay = parseHalfDay hde
+          refuseHoliday id { Date = DateTime(yb, mb, db); HalfDay = startDateHalfDay } { Date = DateTime(ye, me, de); HalfDay = endDateHalfDay }) 
         //Route: admin cancel a pay leave for a user.
-        pathScan "/adminPaidLeavesCancel/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
+        pathScan "/adminPaidLeavesCancel/%d/%d/%d/%d/%s/%d/%d/%d/%s" (fun(id, yb, mb, db, hdb, ye, me, de, hde) ->
+          let startDateHalfDay = parseHalfDay hdb
+          let endDateHalfDay = parseHalfDay hde
+          cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = startDateHalfDay } { Date = DateTime(ye, me, de); HalfDay = endDateHalfDay }) 
         //Route: admin lists all pay leaves
-        pathScan "/adminPaidLeaves/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> listHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) ]]
+        pathScan "/adminPaidLeaves/%d" (fun(id) -> getHoliday id) ]]

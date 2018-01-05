@@ -63,11 +63,10 @@ module Logic =
             | Validated _ -> true
             | Cancelled _ -> false
 
-    let evolve _ event =
-        match event with
-        | RequestCreated request -> PendingValidation request
-        | RequestValidated request -> Validated request
-        | RequestCancelled request -> Cancelled request
+    let evolve _ event = match event with
+                            | RequestCreated request -> PendingValidation request
+                            | RequestValidated request -> Validated request
+                            | RequestCancelled request -> Cancelled request
 
     let getRequestState events =
         events |> Seq.fold evolve NotCreated

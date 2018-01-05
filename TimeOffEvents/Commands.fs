@@ -3,6 +3,7 @@ module TimeOff.Commands
 open System
 open JsonConvert
 open EventStorage
+open System
 
 let store = InMemoryStore.Create<UserId, RequestEvent>()
 
@@ -17,7 +18,7 @@ let reverse command events = events, command
 let addHoliday uid leftBound rightBound =
   let request = {
         UserId = uid
-        RequestId = Guid.Empty
+        RequestId = Guid.NewGuid()
         Start = leftBound
         End = rightBound }
 
@@ -44,8 +45,9 @@ let acceptHoliday uid leftBound rightBound =
   let result = [RequestCreated request] |> reverse ( ValidateRequest (uid, Guid.Empty) ) |> executeAllCommands
   JsonConvert.JSON result
 
-let getHoliday =
-  let result = Logic.getActiveRequests 
+let getHoliday uid =
+  let stream = store.GetStream uid
+  let result = stream.ReadAll 
   JsonConvert.JSON result
 
 let refuseHoliday uid leftBound rightBound =
@@ -56,14 +58,4 @@ let refuseHoliday uid leftBound rightBound =
         End = rightBound }
 
   let result = [ RequestCreated request ] |> reverse ( CancelRequest (uid, Guid.Empty) ) |> executeAllCommands
-  JsonConvert.JSON result
-
-let listHoliday uid leftBound rightBound =
-  let request = {
-        UserId = uid
-        RequestId = Guid.Empty
-        Start = leftBound
-        End = rightBound }
-
-  let result = [] |> reverse ( RequestTimeOff request ) |> executeAllCommands
   JsonConvert.JSON result
