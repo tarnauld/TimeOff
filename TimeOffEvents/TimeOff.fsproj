@@ -54,6 +54,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="JsonConvert.fs" />
     <Compile Include="EventStorage.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="Tests.fs" />
