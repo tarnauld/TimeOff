@@ -3,7 +3,6 @@ module TimeOff.Routes
 open Suave
 open Suave.Filters
 open Suave.Operators
-open Suave.Writers
 open EventStorage
 open System
 open Timeoff
