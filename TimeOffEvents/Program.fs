@@ -1,8 +1,9 @@
 module TimeOff.Server
 
 open Suave
+open Routes
 
 [<EntryPoint>]
 let main args=
-  startWebServer defaultConfig Routes.app
+  startWebServer defaultConfig app
   0
