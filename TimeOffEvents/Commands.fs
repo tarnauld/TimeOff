@@ -25,6 +25,40 @@ let addHoliday uid leftBound rightBound =
   let result = [] |> reverse ( RequestTimeOff request ) |> executeAllCommands
   JsonConvert.JSON result
 
+let cancelHoliday uid leftBound rightBound =
+  let request = {
+        UserId = uid
+        RequestId = Guid.Empty
+        Start = leftBound
+        End = rightBound }
+
+  let result = [] |> reverse ( RequestTimeOff request ) |> executeAllCommands
+  JsonConvert.JSON result
+
+let acceptHoliday uid leftBound rightBound =
+  let request = {
+        UserId = uid
+        RequestId = Guid.Empty
+        Start = leftBound
+        End = rightBound }
+
+  let result = [] |> reverse ( RequestTimeOff request ) |> executeAllCommands
+  JsonConvert.JSON result
+
 let getHoliday =
   let result = Logic.getRequestState [] 
+  JsonConvert.JSON result
+
+let refuseHoliday =
+  let result = Logic.getRequestState [] 
+  JsonConvert.JSON result
+
+let listHoliday uid leftBound rightBound =
+  let request = {
+        UserId = uid
+        RequestId = Guid.Empty
+        Start = leftBound
+        End = rightBound }
+
+  let result = [] |> reverse ( RequestTimeOff request ) |> executeAllCommands
   JsonConvert.JSON result
