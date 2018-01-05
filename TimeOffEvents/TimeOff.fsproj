@@ -7,11 +7,11 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e43259bb-76f6-4435-b345-dacdebf323bf</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Exercise</RootNamespace>
-    <AssemblyName>Exercise</AssemblyName>
+    <RootNamespace>TimeOff</RootNamespace>
+    <AssemblyName>TimeOff</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>Exercise</Name>
+    <Name>TimeOff</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\Exercise.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\TimeOff.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\Exercise.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\TimeOff.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
