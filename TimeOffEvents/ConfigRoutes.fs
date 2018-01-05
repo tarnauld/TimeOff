@@ -12,25 +12,19 @@ let app =
       [ 
         //* User *
         //Route: user ask for a paid leave.
-        path "/userPaidLeaveAsk" >=> 
-          addHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
+        pathScan "/userPaidLeaveAsk/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> addHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM })
         //Route: user can list his own paid leave.
         path "/userPaidLeaves" >=> 
           getHoliday
         //Route: user cancel a pay leave.
-        path "/userPaidLeaveCancel" >=> 
-          cancelHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
+        pathScan "/userPaidLeaveCancel/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
         
         //* Admin *
         //Route: admin accepts a pay leave for a user.
-        path "/adminPaidLeaveAccept" >=> 
-          acceptHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
+        pathScan "/adminPaidLeaveAccept/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> acceptHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
         //Route: admin refuses a pay leave for a user.
-        path "/adminPaidLeavesRefuse" >=> 
-          refuseHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
+        pathScan "/adminPaidLeavesRefuse/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> refuseHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
         //Route: admin cancel a pay leave for a user.
-        path "/adminPaidLeavesCancel" >=> 
-          cancelHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
+        pathScan "/adminPaidLeavesCancel/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> cancelHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) 
         //Route: admin lists all pay leaves
-        path "/adminPaidLeaves" >=> 
-          listHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }]]
+        pathScan "/adminPaidLeaves/%d/%d/%d/%d/%d/%d/%d" (fun(id, yb, mb, db, ye, me, de) -> listHoliday id { Date = DateTime(yb, mb, db); HalfDay = AM } { Date = DateTime(ye, me, de); HalfDay = PM }) ]]
