@@ -1,7 +1,6 @@
-This is a starter project to use in an F# coding assignment working with event-sourcing and modeling a workflow.
-
-It embeds FAKE & Paket.
-
-Just clone the repo or download it, and get started coding and testing in F#!
-
-To get started, just run build.cmd or ./build.sh in the folder.
+* localhost:8080/userPaidLeaveAsk/1/2018/03/23/2018/04/01
+* localhost:8080/userPaidLeaveCancel/1/2018/03/23/2018/04/01
+* localhost:8080/userPaidLeaveAsk/1/2018/03/23/2018/04/01
+* localhost:8080/adminPaidLeaveAccept/1/2018/03/23/2018/04/01
+* localhost:8080/userPaidLeaveAsk/1/2018/07/01/2018/07/15
+* localhost:8080/adminPaidLeavesRefuse/1/2018/07/01/2018/07/15
