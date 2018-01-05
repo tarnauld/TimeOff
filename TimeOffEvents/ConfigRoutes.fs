@@ -27,7 +27,7 @@ let app =
           acceptHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
         //Route: admin refuses a pay leave for a user.
         path "/adminPaidLeavesRefuse" >=> 
-          refuseHoliday
+          refuseHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }
         //Route: admin cancel a pay leave for a user.
         path "/adminPaidLeavesCancel" >=> 
           cancelHoliday 1 { Date = DateTime(2018, 12, 30); HalfDay = AM } { Date = DateTime(2018, 12, 30); HalfDay = PM }

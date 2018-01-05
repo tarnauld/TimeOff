@@ -25,41 +25,49 @@ type TimeOffRequest = {
 
 type Command =
     | RequestTimeOff of TimeOffRequest
+    | CancelRequest of UserId * Guid
     | ValidateRequest of UserId * Guid with
     member this.UserId =
         match this with
         | RequestTimeOff request -> request.UserId
         | ValidateRequest (userId, _) -> userId
+        | CancelRequest (userId, _) -> userId
 
 type RequestEvent =
     | RequestCreated of TimeOffRequest
+    | RequestCancelled of TimeOffRequest
     | RequestValidated of TimeOffRequest with
     member this.Request =
         match this with
         | RequestCreated request -> request
         | RequestValidated request -> request
+        | RequestCancelled request -> request
 
 module Logic =
 
     type RequestState =
         | NotCreated
         | PendingValidation of TimeOffRequest
+        | Cancelled of TimeOffRequest
         | Validated of TimeOffRequest with
         member this.Request =
             match this with
             | NotCreated -> invalidOp "Not created"
             | PendingValidation request
             | Validated request -> request
+            | Cancelled request -> request
         member this.IsActive =
             match this with
             | NotCreated -> false
             | PendingValidation _
             | Validated _ -> true
+            | Cancelled _ -> false
 
     let evolve _ event =
         match event with
         | RequestCreated request -> PendingValidation request
         | RequestValidated request -> Validated request
+        | RequestCancelled request -> Cancelled request
 
     let getRequestState events =
         events |> Seq.fold evolve NotCreated
@@ -90,6 +98,21 @@ module Logic =
         | _ ->
             Error "Request cannot be validated"
 
+    let cancelRequest requestState =
+        match requestState with
+        | PendingValidation request ->
+            Ok [RequestCancelled request]
+        | _ ->
+            Error "Request cannot be cancelled"
+
+    let getActiveRequests =
+        let userRequests = getAllRequests [] 
+        userRequests
+        |> Map.toSeq
+        |> Seq.map (fun (_, state) -> state)
+        |> Seq.where (fun state -> state.IsActive)
+        |> Seq.map (fun state -> state.Request)
+
     let handleCommand (store: IStore<UserId, RequestEvent>) (command: Command) =
         let userId = command.UserId
         let stream = store.GetStream userId
@@ -110,3 +133,6 @@ module Logic =
         | ValidateRequest (_, requestId) ->
             let requestState = defaultArg (userRequests.TryFind requestId) NotCreated
             validateRequest requestState
+        | CancelRequest(_, requestId) ->
+            let requestState = defaultArg (userRequests.TryFind requestId) NotCreated
+            cancelRequest requestState
