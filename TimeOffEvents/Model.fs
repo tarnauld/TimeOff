@@ -94,7 +94,7 @@ module Logic =
         match requestState with
         | PendingValidation request ->
             Ok [RequestValidated request]
-        | _ ->
+        | e ->
             Error "Request cannot be validated"
 
     let cancelRequest requestState =
