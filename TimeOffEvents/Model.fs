@@ -81,7 +81,37 @@ module Logic =
 
         events |> Seq.fold folder Map.empty
 
-    let IsBoundaryOverlapping left right = false
+    let IsDateInPeriod date period =
+        (
+            date.Date.CompareTo period.Start.Date > 0 
+            && date.Date.CompareTo period.End.Date < 0
+        )
+        || (
+            date.Date.Equals period.Start.Date
+            && (
+                date.HalfDay.Equals period.Start.HalfDay
+                || (
+                    date.HalfDay.Equals PM
+                    && period.Start.HalfDay.Equals AM
+                )
+            )
+        )
+        || (
+            date.Date.Equals period.End.Date
+            && (
+                date.HalfDay.Equals period.End.HalfDay
+                || (
+                    date.HalfDay.Equals AM
+                    && period.Start.HalfDay.Equals PM
+                )
+            )
+        )
+
+    let IsBoundaryOverlapping request currentRequest = 
+        IsDateInPeriod request.Start currentRequest
+        || IsDateInPeriod request.End currentRequest
+        || IsDateInPeriod currentRequest.Start request
+        || IsDateInPeriod currentRequest.End request
 
     let overlapWithAnyRequest (previousRequests: TimeOffRequest seq) request =
         previousRequests
