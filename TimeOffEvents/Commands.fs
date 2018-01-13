@@ -22,35 +22,30 @@ let addHoliday uid leftBound rightBound =
         RequestId = Guid.NewGuid()
         Start = leftBound
         End = rightBound }
+  let stream = store.GetStream uid
 
-  let result = [RequestCreated request] |> reverse ( RequestTimeOff request ) |> executeAllCommands
+  let result = Logic.handleCommand store ( RequestTimeOff request )
+  match result with
+  | Ok res -> stream.Append res
+  | Error _ -> ()
   JsonConvert.JSON result
 
 let cancelHoliday uid reqId =
   let guid = Guid.Parse reqId
   let stream = store.GetStream uid
-  let request = stream.ReadAll() 
-                |> Array.ofSeq
-                |> Array.filter (fun req -> match req with
-                                            | RequestCreated command -> guid.Equals command.RequestId && uid.Equals command.UserId
-                                            | _ -> false )
-                |> Array.exactlyOne
-
-  let result = [request] |> reverse ( CancelRequest (uid, guid) ) |> executeAllCommands
+  let result = Logic.handleCommand store ( CancelRequest(uid, guid) )
+  match result with
+  | Ok res -> stream.Append res
+  | Error _ -> ()
   JsonConvert.JSON result
 
 let acceptHoliday uid reqId =
   let guid = Guid.Parse reqId
   let stream = store.GetStream uid
-  let request = stream.ReadAll() 
-                |> Array.ofSeq
-                |> Array.filter (fun req -> match req with
-                                            | RequestCreated command -> guid.Equals command.RequestId && uid.Equals command.UserId
-                                            | _ -> false )
-                |> Array.exactlyOne
-
-
-  let result = [request] |> reverse ( ValidateRequest (uid, Guid.Empty) ) |> executeAllCommands
+  let result = Logic.handleCommand store ( ValidateRequest(uid, guid) )
+  match result with
+  | Ok res -> stream.Append res
+  | Error _ -> ()
   JsonConvert.JSON result
 
 let getHoliday uid =

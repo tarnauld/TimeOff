@@ -3,6 +3,7 @@
 open System
 open EventStorage
 open System
+open JsonConvert
 
 type User =
     | Employee of int
@@ -80,26 +81,11 @@ module Logic =
 
         events |> Seq.fold folder Map.empty
 
-    let IsBoundaryOverlapping left right =
-        ( 
-            left.Date.CompareTo right.Date > 0 
-            && left.Date.CompareTo right.Date < 0 
-        )
-        || ( 
-            left.Date.Equals right.Date
-            && (
-                left.HalfDay.Equals right.HalfDay
-                || (
-                    left.HalfDay.Equals PM
-                    && right.Equals AM
-                )
-            )
-        )
+    let IsBoundaryOverlapping left right = false
 
     let overlapWithAnyRequest (previousRequests: TimeOffRequest seq) request =
         previousRequests
-        |> Seq.exists (fun currentRequest -> IsBoundaryOverlapping request.Start currentRequest.Start
-                                                || IsBoundaryOverlapping currentRequest.End request.End )
+        |> Seq.exists (fun currentRequest -> IsBoundaryOverlapping request currentRequest)
 
     let createRequest previousRequests request =
         if overlapWithAnyRequest previousRequests request then
